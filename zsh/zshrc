@@ -1,0 +1,41 @@
+# ~/.zshrc
+
+export PATH=$HOME/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH
+
+# ssh
+# export SSH_KEY_PATH="~/.ssh/rsa_id"
+
+setprompt() {
+  setopt prompt_subst
+
+  p_host='%F{yellow}%M%f'
+
+  PS1=${(j::Q)${(Z:Cn:):-$'
+    %F{cyan}[%f
+    %F{green}%*%f
+    %F{cyan}][%f
+    %(!.%F{red}%n%f.%F{green}%n%f)
+    %F{cyan}@%f
+    ${p_host}
+    %F{cyan}][%f
+    %F{blue}%~%f
+    %F{cyan}]%f
+    "\n"
+    %(!.%F{red}%#%f.%F{green}%#%f)
+    " "
+  '}}
+
+  PS2=$'%_>'
+  RPROMPT='[%(?.%F{green}%?%f.%F{red}%?%f)]'
+}
+
+setprompt
+
+
+# aliases
+
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# json fancy format tool
+alias jsf="python -mjson.tool"
