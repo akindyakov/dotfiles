@@ -1,0 +1,172 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=4096
+HISTFILESIZE=8192
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+if [ -x /usr/bin/lesspipe ]; then
+    eval "$(SHELL=/bin/sh lesspipe)"
+fi
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# determine if terminal suport colored output
+if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+    # We have color support; assume it's compliant with Ecma-48
+    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+    # a case would tend to support setf rather than setaf.)
+    color_is_supported=yes
+else
+    color_is_supported=
+fi
+
+BLUE_COLOUR_TAG="\e[0;34m"
+BROWN_COLOUR_TAG="\e[0;33m"
+CYAN_COLOUR_TAG="\e[0;36m"
+DARK_GRAY_COLOUR_TAG="\e[1;30m"
+GREEN_COLOUR_TAG="\e[0;32m"
+LIGHT_BLUE_COLOUR_TAG="\e[1;34m"
+LIGHT_CYAN_COLOUR_TAG="\e[1;36m"
+LIGHT_GRAY_COLOUR_TAG="\e[0;37m"
+LIGHT_GREEN_COLOUR_TAG="\e[1;32m"
+LIGHT_PURPLE_COLOUR_TAG="\e[1;35m"
+LIGHT_RED_COLOUR_TAG="\e[1;31m"
+PURPLE_COLOUR_TAG="\e[0;35m"
+RED_COLOUR_TAG="\e[0;31m"
+RESET_COLOUR_TAG="\[\033[00m\]"
+WHITE_COLOUR_TAG="\e[1;37m"
+YELLOW_COLOUR_TAG="\e[1;33m"
+
+PS1=" \u@\h:\w\n$ "
+
+read_git_branch_safe() {
+    local branch_name="$(
+    ( git branch --points-at HEAD --no-color  2> /dev/null || : ) \
+        | grep -F '* ' \
+        | sed -e 's/\* *//g'
+    )"
+    if [ -n "${branch_name}" ]; then
+        echo "[${branch_name}]"
+    fi
+}
+GIT_VERSION="$(git --version 2> /dev/null || : )"
+
+if [ -n "${GIT_VERSION}" ]; then
+    if [ "$color_is_supported" = "yes" ]; then
+        PS1="${BROWN_COLOUR_TAG}\$(read_git_branch_safe)${RESET_COLOUR_TAG}${PS1}"
+    else
+        PS1="\$(read_git_branch_safe)${PS1}"
+    fi
+fi
+
+# determine tmux env and add number to bash promt
+if [ -n "${TMUX}" ]; then
+    TMUX_WINDOW_INDEX="$(tmux display-message -p -F '#{window_index}')"
+    if [ "$color_is_supported" = "yes" ]; then
+        PS1="${CYAN_COLOUR_TAG}[#${TMUX_WINDOW_INDEX}]${RESET_COLOUR_TAG}${PS1}"
+    else
+        PS1="[#${TMUX_WINDOW_INDEX}]${PS1}"
+    fi
+fi
+
+if [ "$color_is_supported" = "yes" ]; then
+    # enable color support of ls and also add handy aliases
+    if [ -x /usr/bin/dircolors ]; then
+        test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+        alias ls="ls --color=auto"
+        alias grep="grep --color=auto"
+        alias fgrep="fgrep --color=auto"
+        alias egrep="egrep --color=auto"
+    fi
+
+    RET_CMD='$(
+        ret_code="$?"
+        if [ ${ret_code} -eq 0 ]; then
+            printf "${GREEN_COLOUR_TAG}"
+        else
+            printf "${RED_COLOUR_TAG}"
+        fi
+        printf "(${ret_code})"
+    )'
+    PS1="${RET_CMD}[\t]${RESET_COLOUR_TAG}${PS1}"
+
+else
+    PS1="($?)[\t]${PS1}"
+
+fi
+
+# some more ls aliases
+alias ll="ls -alF"
+alias la="ls -A"
+
+# Add an "alert" alias for long running commands.
+# Usage: $ sleep 10; alert
+alias alert='
+    notify-send \
+        --urgency=low \
+        "$([ $? -eq 0 ] && echo Success || echo Error)" \
+        "$(history | tail -n1 | sed -e '\''s/^\s*[0-9]\+\s*//;s/[;|]\s*alert$//'\'')"
+'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# json fancy format tool
+alias jsf="python -mjson.tool"
+
+# Fixing ssh-agent forwarding
+if [ -S "${SSH_AUTH_SOCK}" -a ! -h "${SSH_AUTH_SOCK}" ]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_socket"
+    if [ "$(pgrep ssh-agent)" ]; then
+        printf $SSH_AGENT_PID > "$HOME/.ssh/ssh_agent_pid"
+    fi
+fi
+
+export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
+if [ "$(pgrep ssh-agent)" ]; then
+    export SSH_AGENT_PID="$(cat $HOME/.ssh/ssh_agent_pid)"
+fi
