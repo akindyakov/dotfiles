@@ -1,0 +1,27 @@
+# Sample minimal config file.  Copy this to ~/.offlineimaprc and edit to
+# get started fast.
+
+[general]
+# Path to file with arbitrary Python code to be loaded
+pythonfile = ~/.offlineimap.py
+
+[general]
+accounts = <account>
+
+[Account yateam]
+localrepository = <local_repo_name>
+remoterepository = <remote_repo_name>
+
+[Repository <local_repo_name>]
+type = Maildir
+localfolders = ~/mail/<dir>
+
+[Repository <remote_repo_name>]
+type = IMAP
+ssl = yes
+remotehost = <remote_hostname>
+remoteport = 993
+remoteuser = <your mail>
+remotepasseval = get_pass(<account>)
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+maxconnections = 2
