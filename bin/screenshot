@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+_ADD_OPT=""
+_STORE_DIR="$HOME/Pictures/screenshots"
+
+case "$1" in
+-h|--help)
+    echo "
+    $0 full    - Full screen shot
+    $0 select  - Interactively select a window or rectangle with the mouse.
+    $0 focused - Use the currently focused window.
+    "
+    exit 0
+    ;;
+full)
+    _ADD_OPT=""
+    ;;
+select)
+    _ADD_OPT="--select"
+    ;;
+focused)
+    _ADD_OPT="--focused"
+    ;;
+esac
+
+mkdir --parents "${_STORE_DIR}"
+
+fname="$(scrot "${_STORE_DIR}/"'%Y-%m-%d--%T_$wx$h_scrot.png' $_ADD_OPT --exec 'echo $f')"
+
+notify-send "Scrot" "Saved to ${fname}"
