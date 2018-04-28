@@ -1,0 +1,82 @@
+# allows to reread .muttrc
+reset all
+unhook *
+
+mailboxes =INBOX
+
+set realname="Alexander Kindyakov"
+set from="Alexander Kindyakov <akindyakov@gmail.com>"
+set sendmail="/usr/bin/msmtp -a gmail"
+set envelope_from=yes
+
+#set imap_user = "<login>@<>.<>"
+#set imap_pass="$my_pass"
+
+set timeout = 15
+set mail_check = 60
+set beep_new = yes
+
+set imap_keepalive = 300
+set imap_pipeline_depth=0
+unset imap_passive
+set imap_check_subscribed
+
+set folder="~/mail/gmail"
+mailboxes `echo ~/mail/gmail/*`
+set spoolfile="~/mail/gmail/INBOX"
+set mbox      = "~/mail/gmail/Archives"
+set record="=Sended"
+set postponed = "~/mail/gmail/Drafts"
+set trash = "~/mail/gmail/Trash"
+
+set charset=utf-8
+set folder_format="%2C %t %N %8s %d %f"
+
+set header_cache="~/.mutt/gmail/headers"
+set message_cachedir="~/.mutt/gmail/bodies"
+set certificate_file="~/.mutt/gmail_certificates"
+
+set sort = "threads"
+set sort_aux = "last-date-received"
+
+set editor="/usr/bin/vim"
+hdr_order Date From To Cc Subject
+set sort=threads
+ignore *
+unignore from date subject to cc
+set implicit_autoview
+set move = no # do not move readed messages to my mailbox
+macro index     h "c?" # h will take you to the folder list in the index
+
+set pager_index_lines=24
+set signature="~/.signature"
+
+# Colors for use with xterm and the like, white background.
+color hdrdefault red default
+color quoted brightblue default
+color signature red default
+color indicator brightyellow red
+color error brightred default
+color status yellow blue
+color tree magenta default
+color tilde magenta default
+color message brightcyan default
+color markers brightcyan default
+color attachment brightmagenta default
+color search default green
+color header brightred default ^(From|Subject):
+color body magenta cyan "(ftp|http)://[^ ]+"
+color body magenta default [-a-z_0-9.]+@[-a-z_0-9.]+
+color underline brightgreen default
+
+# tagged messages
+color index black white "~T"
+color index green black "~N|~O"
+mono quoted bold
+
+bind editor <Tab> complete-query
+bind editor ^T complete
+bind attach,index g first-entry
+bind attach,index G last-entry
+
+set quit=ask-yes
