@@ -1,3 +1,5 @@
+" ~/.vimrc
+
 "-----------theme -------------------------
 colorscheme koehler
 sy on

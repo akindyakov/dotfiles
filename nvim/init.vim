@@ -1,3 +1,5 @@
+" ~/.config/nvim/init.vim
+
 set termguicolors
 sy on
 

@@ -1,3 +1,5 @@
+# ~/.mutt/muttrc
+
 # allows to reread .muttrc
 reset all
 unhook *
