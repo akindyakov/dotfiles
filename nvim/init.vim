@@ -1,5 +1,6 @@
 " ~/.config/nvim/init.vim
 
+colorscheme desert
 set termguicolors
 sy on
 
