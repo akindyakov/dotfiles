@@ -1,96 +1,133 @@
 #!/usr/bin/env bash
 
-set -e -x
+set -e
 
-HOME_TMP="$HOME/tmp"
-OLD_VERSION_DIR="$HOME_TMP/old_version"
-BIN_DIR="$HOME/bin"
+SRC_DIR="$(pwd)"
+HOME_TMP="${HOME}/tmp"
+OLD_VERSION_DIR="${HOME_TMP}/old_version"
+BIN_DIR="${HOME}/bin"
 
-init_env() {
-    mkdir --parents "$HOME_TMP"
-    mkdir --parents "$OLD_VERSION_DIR"
-    mkdir --parents "$BIN_DIR"
-
-    if [[ -d "$HOME/Downloads" ]]; then
-        rm --recursive "$HOME/Downloads"
-        ln --symbolic "$HOME_TMP" "$HOME/Downloads"
-    fi
+err() {
+  local msg="$@"
+  echo "${msg}" >&2
+  exit 1
 }
 
-bin() {
-    install_file "other/saveit" "$HOME/bin/saveit"
-    install_file "other/screenshot.sh" "$HOME/bin/screenshot.sh"
-    install_file "other/amount" "$HOME/bin/amount"
+warn() {
+  local msg="$@"
+  echo "${msg}"
+}
+
+assert_src_dir() {
+  if [[ ! -f "${SRC_DIR}/install.sh" ]]; then
+    err "Wrong base directory, run install.sh from source directory."
+  fi
+}
+
+init_env() {
+  mkdir --parents "${HOME_TMP}"
+  mkdir --parents "${OLD_VERSION_DIR}"
+  mkdir --parents "${BIN_DIR}"
+  if [[ ! -L "${HOME}/Downloads" ]]; then
+    mv "${HOME}/Downloads/"* "${HOME_TMP}/"
+    rm --recursive "${HOME}/Downloads"
+    ln --symbolic "${HOME_TMP}" "${HOME}/Downloads"
+  fi
 }
 
 install_file() {
-    local new=$1
-    local old=$2
+  local src="${SRC_DIR}/$1"
+  local dst="$2"
 
-    if [[ -f "$old" ]]; then
-        if ! $(diff -q "$new" "$old" >&2); then
-            mkdir --parent "$OLD_VERSION_DIR"
-            cp "$old" "$OLD_VERSION_DIR/$(basename $old)"
-        fi
+  if [[ ! -f "${src}" ]]; then
+    err "The source file \"${dst}\" does not exist"
+  fi
+  if [[ ! -L "${dst}" ]]; then
+    local back_up_path="${OLD_VERSION_DIR}/$(basename $dst).$(date +'%s.%N')"
+    warn "Real file in destination node \"${dst}\", back up it to \"${back_up_path}\""
+    mv "${dst}" "${back_up_path}"
+  fi
+  local dst_dir="$(dirname ${dst})"
+  if [[ ! -d "${dst_dir}" ]]; then
+    mkdir --parents "${dst_dir}"
+  fi
+  if [[ -L "${dst}" ]]; then
+    local dst_realpath="$(readlink ${dst})"
+    if [[ "${dst_realpath}" != "${src}" ]]; then
+      err "Unexpected symbolic link of target: ${dst} -> ${dst_realpath}"
     fi
-    cp $new $old
+  else
+    ln --symbolic "${src}" "${dst}"
+  fi
+}
+
+scripts() {
+  install_file "bin/screenshot" "${HOME}/bin/screenshot"
 }
 
 crontab_cfg() {
-    mkdir --parent "$OLD_VERSION_DIR"
-    crontab -l > "$OLD_VERSION_DIR/crontab.cfg"
-    cat crontab.cfg | crontab -
+  mkdir --parents "${OLD_VERSION_DIR}"
+  crontab -l > "${OLD_VERSION_DIR}/crontab.cfg"
+  cat crontab.cfg | crontab -
 }
 
 vim_cfg() {
-    install_file vimrc "$HOME/.vimrc"
+  install_file "vim/vimrc" "${HOME}/.vimrc"
+}
+
+nvim_cfg() {
+  install_file "nvim/init.vim" "${HOME}/.config/nvim/init.vim"
 }
 
 bash_cfg() {
-    install_file bash/bashrc "$HOME/.bashrc"
+  install_file "bash/bashrc" "${HOME}/.bashrc"
+}
+
+zsh_cfg() {
+  install_file "zsh/zshrc" "${HOME}/.zshrc"
 }
 
 i3_cfg() {
-    mkdir --parents "$HOME/.i3"
-    install_file i3/config      "$HOME/.i3/config"
-    install_file i3/prepare.sh  "$HOME/.i3/prepare.sh"
-    install_file i3/status.conf "$HOME/.i3/status.conf"
+  install_file "i3/config"    "${HOME}/.i3/config"
+  install_file "i3/prepare.sh"  "${HOME}/.i3/prepare.sh"
+  install_file "i3/status.conf" "${HOME}/.i3/status.conf"
 }
 
 ssh_cfg() {
-    mkdir --parents "$HOME/.ssh"
-    install_file ssh/config "$HOME/.ssh/config"
+  install_file "ssh/config" "${HOME}/.ssh/config"
 }
 
 tmux_cfg() {
-    install_file tmux.conf "$HOME/.tmux.conf"
+  install_file "tmux/tmux.conf" "${HOME}/.tmux.conf"
 }
 
 dunst_cfg() {
-    mkdir --parents "$HOME/.config/dunst"
-    install_file "dunst/dunstrc" "$HOME/.config/dunst/dunstrc"
+  install_file "dunst/dunstrc" "${HOME}/.config/dunst/dunstrc"
 }
 
 nogui() {
-    init_env
-    bin
-    vim_cfg
-    bash_cfg
-    ssh_cfg
-    tmux_cfg
+  init_env
+  vim_cfg
+  nvim_cfg
+  tmux_cfg
+  bash_cfg
+  zsh_cfg
+  ssh_cfg
 }
 
 gui() {
-    nogui
+  nogui
 
-    crontab_cfg
-    i3_cfg
-    dunst_cfg
+  i3_cfg
+  dunst_cfg
+  scripts
 }
 
+assert_src_dir
+
 if [ -z "$*" ]; then
-    echo "$(basename $0) <function> <arg> [<arg>...]" >&2
-    exit 1
+  echo "$(basename $0) <function> <arg> [<arg>...]" >&2
+  exit 1
 else
-    "$@"
+  "$@"
 fi
