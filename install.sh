@@ -65,6 +65,12 @@ scripts() {
   install_file "bin/screenshot" "${HOME}/bin/screenshot"
 }
 
+touchpad_synaptics_cfg() {
+  err "You need root privilegies to perform it.
+Manualy run 'sudo cp etc/X11/xorg.conf.d/70-synaptics.conf /etc/X11/xorg.conf.d/'
+  "
+}
+
 crontab_cfg() {
   mkdir --parents "${OLD_VERSION_DIR}"
   crontab -l > "${OLD_VERSION_DIR}/crontab.cfg"
