@@ -1,6 +1,29 @@
 " ~/.config/nvim/init.vim
+"
+if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
+    !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    endif
+
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+set rtp+=~/.local/share/nvim/site/autoload/plug.vim
+call plug#begin('~/.local/share/nvim/plugged')
+" Make sure you use single quotes
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" " Plugin outside ~/.vim/plugged with post-update hook
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+" Initialize plugin system
+call plug#end()
+
 
 colorscheme desert
+
 set termguicolors
 sy on
 
