@@ -35,6 +35,11 @@ setprompt() {
 setprompt
 
 
+# History
+export HISTFILE=~/.zsh_history
+export HISTSIZE=9999999
+export SAVEHIST=$HISTSIZE
+
 # aliases
 
 # alias zshconfig="mate ~/.zshrc"
@@ -42,6 +47,7 @@ setprompt
 
 # json fancy format tool
 alias jsf="python -mjson.tool"
+alias timelog="ts '[%Y-%m-%d %H:%M:%S]'"
 
 SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 
