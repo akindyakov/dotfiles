@@ -74,6 +74,11 @@ au BufNewFile,BufRead * let b:mtrailingws=matchadd('ErrorMsg', '\s\+$', -1)
 " strip space chars from end of lines
 com RStrip :%s/\s\+$//e
 
+" Current date insertion
+com Now put =strftime('%Y.%m.%d/%H:%M')
+com Today put =strftime('%Y.%m.%d')
+
+
 " The following are commented out as they cause vim to behave a lot
 " differently from regular Vi. They are highly recommended though.
 set showcmd       " Show (partial) command in status line.
