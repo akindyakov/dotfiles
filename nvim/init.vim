@@ -41,9 +41,6 @@ set textwidth=0
 
 " lines number switch on
 set number
-set winminheight=0
-set noequalalways
-set winheight=9999
 set autoread
 
 if exists('+colorcolumn')
