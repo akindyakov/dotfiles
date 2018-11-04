@@ -19,6 +19,8 @@ Plug 'vim-airline/vim-airline-themes'
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
+Plug 'rking/ag.vim'
+
 " Initialize plugin system
 call plug#end()
 
