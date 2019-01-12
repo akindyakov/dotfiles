@@ -5,6 +5,8 @@ compinit
 
 export PATH=$HOME/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH
 
+export EDITOR=/usr/bin/nvim
+
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
