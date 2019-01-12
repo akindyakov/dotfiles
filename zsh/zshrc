@@ -55,15 +55,12 @@ alias plz="~/.please/please"
 SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    rm -rf "${SSH_AUTH_SOCK}"
     ssh-agent -a "${SSH_AUTH_SOCK}" > ~/.ssh/agent_start.sh
+    eval "$(<~/.ssh/agent_start.sh)"
 else
     export SSH_AUTH_SOCK
 fi
-
-if [[ -z "${SSH_AGENT_PID}" ]]; then
-    eval "$(<~/.ssh/agent_start.sh)"
-fi
-
 
 ## History Configuration
 
