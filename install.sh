@@ -111,6 +111,10 @@ dunst_cfg() {
   install_file "dunst/dunstrc" "${HOME}/.config/dunst/dunstrc"
 }
 
+git_cfg() {
+  install_file "git/gitconfig" "${HOME}/.gitconfig"
+}
+
 nogui() {
   init_env
   vim_cfg
@@ -119,6 +123,7 @@ nogui() {
   bash_cfg
   zsh_cfg
   ssh_cfg
+  git_cfg
 }
 
 gui() {
