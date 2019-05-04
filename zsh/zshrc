@@ -51,6 +51,7 @@ export SAVEHIST=$HISTSIZE
 alias jsf="python -mjson.tool"
 alias timelog="ts '[%Y-%m-%d %H:%M:%S]'"
 alias plz="~/.please/please"
+alias metamorph="~/source/git.metamorph/target/release/metamorph --on-dir ~/source/git.note/todo/files"
 
 SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 
