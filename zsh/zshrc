@@ -1,7 +1,8 @@
 # ~/.zshrc
 
-autoload -Uz compinit
-compinit
+autoload -Uz compinit colors zcalc
+compinit -d
+colors
 
 export PATH=$HOME/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH
 
