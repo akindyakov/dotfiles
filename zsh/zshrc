@@ -17,7 +17,7 @@ setprompt() {
 
   PS1=${(j::Q)${(Z:Cn:):-$'
     %F{cyan}[%f
-    %F{green}%*%f
+    %F{green}%D{%Y.%m.%d/%H:%M:%S}%f
     %F{cyan}][%f
     %(!.%F{red}%n%f.%F{green}%n%f)
     %F{cyan}@%f
