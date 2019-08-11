@@ -42,7 +42,7 @@ install_file() {
   if [[ ! -f "${src}" ]]; then
     err "The source file \"${dst}\" does not exist"
   fi
-  if [[ ! -L "${dst}" ]]; then
+  if [[ -e "${dst}" ]] && [[ ! -L "${dst}" ]]; then
     local back_up_path="${OLD_VERSION_DIR}/$(basename $dst).$(date +'%s.%N')"
     warn "Real file in destination node \"${dst}\", back up it to \"${back_up_path}\""
     mv "${dst}" "${back_up_path}"
