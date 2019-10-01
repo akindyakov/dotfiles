@@ -21,13 +21,30 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 Plug 'rking/ag.vim'
 
+Plug 'rust-lang/rust.vim'
+
+Plug 'racer-rust/vim-racer'
+
 " Initialize plugin system
 call plug#end()
 
-colorscheme desert
+"----------- vim-racer -------------------------
+set hidden
+let g:racer_cmd = "/home/akindyakov/.cargo/bin/racer"
+let g:racer_experimental_completer = 1
 
+au FileType rust nmap gd <Plug>(rust-def)
+au FileType rust nmap gD <Plug>(rust-doc)
+au FileType rust nmap gs <Plug>(rust-def-split)
+au FileType rust nmap gx <Plug>(rust-def-vertical)
+
+"----------- end vim-racer -------------------------
+
+"-----------theme -------------------------
+colorscheme desert
 set termguicolors
 sy on
+"-----------end theme ---------------------
 
 set fileencodings=utf8,cp1251,koi8r,cp866,ucs-2le
 set encoding=utf8
