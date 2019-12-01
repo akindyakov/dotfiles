@@ -43,7 +43,7 @@ export HISTFILE=~/.zsh_history
 export HISTSIZE=9999999
 export SAVEHIST=$HISTSIZE
 
-# aliases
+## Alias section
 
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
@@ -52,7 +52,7 @@ export SAVEHIST=$HISTSIZE
 alias jsf="python -mjson.tool"
 alias timelog="ts '[%Y-%m-%d %H:%M:%S]'"
 alias plz="~/.please/please"
-alias metamorph="~/source/git.metamorph/target/release/metamorph --on-dir ~/source/git.note/todo/files"
+alias metamorph="~/source/git.metamorph/target/release/metamorph --meta ~/source/git.note/todo/files/meta.json"
 
 SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 
@@ -70,8 +70,42 @@ HISTSIZE=25000              # How many lines of history to keep in memory
 HISTFILE=~/.zsh_history     # Where to save history to disk
 SAVEHIST=5000               # Number of history entries to save to disk
 HISTDUP=erase               # Erase duplicates in the history file
+WORDCHARS=${WORDCHARS//\/[&.;]}     # Don't consider certain characters part of the word
+
+## Options section
 setopt    appendhistory     # Append history to the history file (no overwriting)
 setopt    sharehistory      # Share history across terminals
 setopt    incappendhistory  # Immediately append to the history file, not just when a term is killed
+setopt    numericglobsort   # Sort filenames numerically when it makes sense
+setopt    nobeep            # No beep
+
+## Keybindings section
+bindkey -e
+bindkey '^[[7~' beginning-of-line                               # Home key
+bindkey '^[[H' beginning-of-line                                # Home key
+if [[ "${terminfo[khome]}" != "" ]]; then
+  bindkey "${terminfo[khome]}" beginning-of-line                # [Home] - Go to beginning of line
+fi
+bindkey '^[[8~' end-of-line                                     # End key
+bindkey '^[[F' end-of-line                                     # End key
+if [[ "${terminfo[kend]}" != "" ]]; then
+  bindkey "${terminfo[kend]}" end-of-line                       # [End] - Go to end of line
+fi
+bindkey '^[[2~' overwrite-mode                                  # Insert key
+bindkey '^[[3~' delete-char                                     # Delete key
+bindkey '^[[C'  forward-char                                    # Right key
+bindkey '^[[D'  backward-char                                   # Left key
+bindkey '^[[5~' history-beginning-search-backward               # Page up key
+bindkey '^[[6~' history-beginning-search-forward                # Page down key
+
+# Navigate words with ctrl+arrow keys
+bindkey '^[Oc' forward-word                                     #
+bindkey '^[Od' backward-word                                    #
+bindkey '^[[1;5D' backward-word                                 #
+bindkey '^[[1;5C' forward-word                                  #
+bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
+bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /usr/share/nvm/init-nvm.sh
+export PATH=$PATH:~/.yarn/bin
