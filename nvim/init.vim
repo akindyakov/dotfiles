@@ -21,9 +21,16 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
 Plug 'rking/ag.vim'
 
+" Rust development
 Plug 'rust-lang/rust.vim'
-
 Plug 'racer-rust/vim-racer'
+
+" Javascript development
+"
+" JS sytax highlighting
+Plug 'pangloss/vim-javascript'
+
+Plug 'ternjs/tern_for_vim', {'do': 'yarn && yarn global add tern'}
 
 " Initialize plugin system
 call plug#end()
@@ -37,8 +44,14 @@ au FileType rust nmap gd <Plug>(rust-def)
 au FileType rust nmap gD <Plug>(rust-doc)
 au FileType rust nmap gs <Plug>(rust-def-split)
 au FileType rust nmap gx <Plug>(rust-def-vertical)
-
 "----------- end vim-racer -------------------------
+
+"--- Javascript development plugin set up ---
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
+let g:javascript_plugin_flow = 1
+"--- end ---
+
 
 "-----------theme -------------------------
 colorscheme desert
