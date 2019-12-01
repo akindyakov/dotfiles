@@ -8,6 +8,10 @@ export PATH=$HOME/bin:$HOME/.cargo/bin:/usr/local/bin:$PATH
 
 export EDITOR=/usr/bin/nvim
 
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$HOME/.local/share
+export XDG_CACHE_HOME=$HOME/.cache
+
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
@@ -66,7 +70,7 @@ fi
 
 ## History Configuration
 
-HISTSIZE=25000              # How many lines of history to keep in memory
+HISTSIZE=100000              # How many lines of history to keep in memory
 HISTFILE=~/.zsh_history     # Where to save history to disk
 SAVEHIST=5000               # Number of history entries to save to disk
 HISTDUP=erase               # Erase duplicates in the history file
@@ -107,5 +111,5 @@ bindkey '^H' backward-kill-word                                 # delete previou
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /usr/share/nvm/init-nvm.sh
-export PATH=$PATH:~/.yarn/bin
+#source /usr/share/nvm/init-nvm.sh
+#export PATH=$PATH:~/.yarn/bin

@@ -94,9 +94,11 @@ zsh_cfg() {
 }
 
 i3_cfg() {
-  install_file "i3/config"    "${HOME}/.i3/config"
-  install_file "i3/prepare.sh"  "${HOME}/.i3/prepare.sh"
-  install_file "i3/status.conf" "${HOME}/.i3/status.conf"
+  install_file "i3/config"    "${HOME}/.config/i3/config"
+}
+
+i3status_cfg() {
+  install_file "i3status/config" "${HOME}/.config/i3status/config"
 }
 
 ssh_cfg() {
