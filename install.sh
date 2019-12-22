@@ -105,6 +105,10 @@ ssh_cfg() {
   install_file "ssh/config" "${HOME}/.ssh/config"
 }
 
+redshift_cfg() {
+  install_file "redshift/redshift.conf" "${HOME}/.config/redshift.conf"
+}
+
 tmux_cfg() {
   install_file "tmux/tmux.conf" "${HOME}/.tmux.conf"
 }
@@ -115,6 +119,11 @@ dunst_cfg() {
 
 git_cfg() {
   install_file "git/gitconfig" "${HOME}/.gitconfig"
+}
+
+x() {
+  install_file "x/Xmodmap" "${HOME}/.Xmodmap"
+  install_file "x/xinitrc" "${HOME}/.xinitrc"
 }
 
 nogui() {
@@ -131,8 +140,10 @@ nogui() {
 gui() {
   nogui
 
+  x
   i3_cfg
   dunst_cfg
+  redshift_cfg
   scripts
 }
 

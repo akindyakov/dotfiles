@@ -113,3 +113,4 @@ bindkey '^[[Z' undo                                             # Shift+tab undo
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 #source /usr/share/nvm/init-nvm.sh
 #export PATH=$PATH:~/.yarn/bin
+[ -d ~/.zfunc ] && fpath+=~/.zfunc

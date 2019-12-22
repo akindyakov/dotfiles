@@ -43,7 +43,7 @@ tztime local {
 }
 
 wireless _first_ {
-        format_up = "W: (%quality at %essid) %ip"
+        format_up = "W: %quality \"%essid\" %ip"
         format_down = "W: down"
 }
 
@@ -57,4 +57,7 @@ battery all {
   format = "%status %percentage %remaining"
   integer_battery_capacity = true
   last_full_capacity = true
+
+  low_threshold = 11
+  threshold_type = percentage
 }

@@ -1,0 +1,7 @@
+! https://wiki.archlinux.org/index.php/Xmodmap
+clear lock
+clear control
+add control = Caps_Lock Control_L Control_R
+keycode 66 = Control_L Caps_Lock NoSymbol NoSymbol
+! To set up reverse scroll (as in MacOS)
+pointer = 1 2 3 5 4 7 6 8 9 10
