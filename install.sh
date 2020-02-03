@@ -28,7 +28,7 @@ init_env() {
   mkdir --parents "${HOME_TMP}"
   mkdir --parents "${OLD_VERSION_DIR}"
   mkdir --parents "${BIN_DIR}"
-  if [[ ! -L "${HOME}/Downloads" ]]; then
+  if [[ ! -L "${HOME}/Downloads" && -d "${HOME}/Downloads" ]]; then
     mv "${HOME}/Downloads/"* "${HOME_TMP}/"
     rm --recursive "${HOME}/Downloads"
     ln --symbolic "${HOME_TMP}" "${HOME}/Downloads"

@@ -170,3 +170,5 @@ export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 if [ "$(pgrep ssh-agent)" ]; then
     export SSH_AGENT_PID="$(cat $HOME/.ssh/ssh_agent_pid)"
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
