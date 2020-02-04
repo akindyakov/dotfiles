@@ -77,6 +77,10 @@ crontab_cfg() {
   cat crontab.cfg | crontab -
 }
 
+alacritty_cfg() {
+  install_file "alacritty/alacritty.yml" "${HOME}/.config/alacritty/alacritty.yml"
+}
+
 vim_cfg() {
   install_file "vim/vimrc" "${HOME}/.vimrc"
 }
@@ -142,9 +146,11 @@ gui() {
 
   x
   i3_cfg
+  i3status_cfg
   dunst_cfg
   redshift_cfg
   scripts
+  alacritty_cfg
 }
 
 assert_src_dir
