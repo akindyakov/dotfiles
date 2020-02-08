@@ -21,8 +21,8 @@ volume master {
     device = "default"
     mixer = "Master"
     mixer_idx = 0
-    format = "♪: %volume"
-    format_muted = "♪: (mute)%volume"
+    format = "♪:%volume"
+    format_muted = "♪:(mute)%volume"
 }
 
 disk "/" {
@@ -61,6 +61,7 @@ battery all {
   status_bat = "Bat:"
   status_unk = "? Unk"
 
-  low_threshold = 11
+  # low_threshold = 11,
+  # TODO(akindyakov): assumption this causes sudden shotdowns
   threshold_type = percentage
 }
