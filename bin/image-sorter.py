@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from piexif._exceptions import InvalidImageDataError
 import piexif
 
@@ -12,8 +14,6 @@ import sys
 
 _dates_names = [
     # b'2016:10:18 14:22:51'
-    ("0th", "DateTime"),
-    ("1st", "DateTime"),
     ("Exif", "DateTimeOriginal"),
     ("Exif", "DateTimeDigitized"),
 ]
@@ -50,19 +50,20 @@ def file_creation_date(path_to_file):
         # so we'll settle for when its content was last modified.
         return datetime.datetime.fromtimestamp(stat.st_mtime)
 
-dd_mm_yyyy_re = re.compile("([0123]\d)[:,.;-_]([01]\d)[:,.;-_]([12][09]\d\d)")
-yyyy_mm_d_re = re.compile("([12][09]\d\d)[:,.;-_]([01]\d)[:,.;-_]([0123]\d)")
-dd_mm_yy_re = re.compile("([0123]\d)[:,.;-_]([01]\d)[:,.;-_](\d\d)")
-yyyy_re = re.compile("(20|19)(\d\d)")
+dd_mm_yyyy_re = re.compile(r"(31|30|[012]\d)[:,.;\-_/](10|11|12|0\d)[:,.;\-_/](19|20)(\d\d)")
+yyyy_mm_d_re = re.compile(r"(199\d|20[012]\d)[:,.;\-_/]?(10|11|12|0\d)[:,.;\-_/]?(31|30|[012]\d)")
+yy_mm_dd_re = re.compile(r"(\d\d)[:,.;\-_/](10|11|12|0\d)[:,.;\-_/](31|30|[012]\d)")
+dd_mm_yy_re = re.compile(r"(31|30|[012]\d)[:,.;\-_/](10|11|12|0\d)[:,.;\-_/](\d\d)")
 
 def guess_date_from_str(s):
     r = dd_mm_yyyy_re.search(s)
     if r is not None:
         d = r.group(1)
         m = r.group(2)
-        y = r.group(3)
+        y1 = r.group(3)
+        y2 = r.group(4)
         try:
-            dt = datetime.datetime(year=int(y), month=int(m), day=int(d))
+            dt = datetime.datetime(year=int(y1) * 100 + int(y2), month=int(m), day=int(d))
             return dt
         except ValueError:
             pass
@@ -86,11 +87,13 @@ def guess_date_from_str(s):
             return dt
         except ValueError:
             pass
-    r = yyyy_re.search(s)
+    r = yy_mm_dd_re.search(s)
     if r is not None:
-        y = r.group()
+        y = r.group(1)
+        m = r.group(2)
+        d = r.group(3)
         try:
-            dt = datetime.datetime(year=int(y), month=1, day=1)
+            dt = datetime.datetime(year=int(y) + 2000, month=int(m), day=int(d))
             return dt
         except ValueError:
             pass
@@ -98,12 +101,6 @@ def guess_date_from_str(s):
 
 
 def guess_create_time(file_path):
-    # b'2016:10:18 14:22:51'
-    # 0th 306 DateTime
-    # 1th 306 DateTime
-    # Exif 36867 DateTimeOriginal
-    # Exif 36868 DateTimeDigitized
-    # GPS GPSDateStamp
     dates = []
     try:
         exif_dict = piexif.load(file_path)
@@ -146,53 +143,60 @@ def walk(src_dir, dst_dir):
             file_path = os.path.join(root, filename)
             process_file(file_path, dst_dir)
 
+_md5_cache = {}
 
-def pick_up_filename(dir_path, basename, keep_unique):
+def md5(fname, store_in_cache=False):
+    hash_md5 = hashlib.md5()
+    if fname not in _md5_cache:
+        with open(fname, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                hash_md5.update(chunk)
+        hexdigest = hash_md5.hexdigest()
+        if store_in_cache:
+            _md5_cache[fname] = hexdigest
+        return hexdigest
+    return _md5_cache[fname]
+
+_par_copy_re = re.compile(r"\(\d{1,3}\)")
+
+def normalise_basename(basename):
     if basename.startswith("."):
         basename = basename[1:]
     if basename.startswith("~"):
         basename = basename[1:]
     basename = basename.replace("  ", " ").replace("  ", " ").replace("  ", " ")
     basename = basename.replace(" ", "-")
-    new_file_name = os.path.join(dir_path, basename)
-    if keep_unique and os.path.exists(new_file_name):
-        num = 0
-        bare_basename, ext = os.path.splitext(basename)
-        while os.path.exists(new_file_name):
+    basename = basename.lower()
+    basename = _par_copy_re.sub("", basename)
+    return basename
+
+def pick_up_filename(dst_path, file_path):
+    basename = normalise_basename(os.path.basename(file_path))
+    new_file_name = os.path.join(dst_path, basename)
+
+    num = 0
+    bare_basename, ext = os.path.splitext(basename)
+    while os.path.exists(new_file_name):
+        if md5(new_file_name, True) == md5(file_path):
+            return None
+        else:
             num = num + 1
             new_file_name = os.path.join(
-                dir_path,
+                dst_path,
                 "{}-{}{}".format(bare_basename, str(num), ext)
             )
     return new_file_name
-
-_md5_cache = {}
-
-def md5(fname, use_cache=False):
-    hash_md5 = hashlib.md5()
-    if fname not in _md5_cache:
-        with open(fname, "rb") as f:
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_md5.update(chunk)
-        if not use_cache:
-            return hash_md5.hexdigest()
-        _md5_cache[fname] = hash_md5.hexdigest()
-    return _md5_cache[fname]
 
 def process_file(file_path, dst_dir):
     bdate = guess_create_time(file_path)
     dst_dir = os.path.join(dst_dir, bdate.strftime("%Y/%b/%d-%a"))
     os.makedirs(dst_dir, exist_ok=True)
-    basename = os.path.basename(file_path)
-    new_file_name = pick_up_filename(dst_dir, basename, False)
-    if os.path.exists(new_file_name):
-        if md5(new_file_name, True) == md5(file_path):
-            logging.warning("skip repeating file: {} -> {}".format(file_path, new_file_name))
-            return
-        else:
-            new_file_name = pick_up_filename(dst_dir, basename, True)
-    logging.info("copy: {} {}".format(file_path, new_file_name))
-    shutil.copyfile(file_path, new_file_name)
+    new_file_name = pick_up_filename(dst_dir, file_path)
+    if new_file_name is None:
+        logging.warning("skip repeated: {} -> {}".format(file_path, dst_dir))
+    else:
+        logging.warning("copy: {} {}".format(file_path, new_file_name))
+        shutil.copyfile(file_path, new_file_name)
 
 src_dir = sys.argv[1]
 dst_dir = sys.argv[2]
