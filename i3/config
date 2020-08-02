@@ -79,11 +79,13 @@ bindsym $mod+F5 exec terminal -e 'mocp'
 bindsym $mod+t exec --no-startup-id pkill compton
 bindsym $mod+Ctrl+t exec --no-startup-id compton -b
 bindsym $mod+Shift+d --release exec "killall dunst; exec notify-send 'restart dunst'"
-bindsym Print exec --no-startup-id i3-scrot
-bindsym $mod+Print --release exec --no-startup-id i3-scrot -w
-bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s
 bindsym $mod+Ctrl+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
+
+# Screen capture
+bindsym Print exec --no-startup-id maim ~/Pictures/$(date +%Y.%m.%d.%A.%T).png
+bindsym $mod+Print --release exec --no-startup-id maim -i $(xdotool getactivewindow) ~/Pictures/$(date +%Y.%m.%d.%A.%T)-window.png
+bindsym $mod+Shift+p --release exec --no-startup-id maim -s ~/Pictures/$(date +%Y.%m.%d.%A.%T)-selected.png
 
 # focus_follows_mouse no
 
