@@ -54,7 +54,7 @@ bindsym $mod+d exec --no-startup-id "rofi -show drun -run-shell-command '{termin
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 # Emoji keyboard
-bindsym $mod+Ctrl+e exec --no-startup-id "rofimoji --files emojis math arrows"
+bindsym $mod+Ctrl+e exec --no-startup-id "rofimoji --files emojis math arrows --insert-with-clipboard"
 
 ################################################################################################
 ## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
