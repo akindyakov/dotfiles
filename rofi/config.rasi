@@ -144,4 +144,3 @@ configuration {
 /*	me-accept-custom: "Control+MouseDPrimary";*/
 }
 @import "/usr/share/rofi/themes/solarized.rasi"
-# Original /home/akindyakov/.config/rofi/config.rasi

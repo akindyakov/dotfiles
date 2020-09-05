@@ -109,4 +109,5 @@ pacman -Suy \
   zathura \
   zathura-pdf-mupdf \
   zsh \
+  rofimoji \
 
