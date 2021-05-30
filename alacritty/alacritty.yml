@@ -29,8 +29,8 @@ window:
   # Units are physical pixels; this is not DPI aware.
   # (change requires restart)
   padding:
-    x: 2
-    y: 2
+    x: 0
+    y: 0
 
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: false
@@ -50,7 +50,7 @@ window:
   # decorations: true
 
 # When true, bold text is drawn using the bright variant of colors.
-draw_bold_text_with_bright_colors: true
+draw_bold_text_with_bright_colors: false
 
 # Font configuration (changes require restart)
 #
@@ -72,39 +72,39 @@ draw_bold_text_with_bright_colors: true
 # * https://wiki.archlinux.org/index.php/font_configuration#Fontconfig_configuration
 # * file:///usr/share/doc/fontconfig/fontconfig-user.html
 font:
+  # Point size of the font
+  size: 12.0
+
   # The normal (roman) font face to use.
   normal:
-    family: xos4 Terminus # should be "Menlo" or something on macOS.
+    family: Terminus # should be "Menlo" or something on macOS.
     # Style can be specified to pick a specific face.
     # style: Regular
 
   # The bold font face
   bold:
-    family: xos4 Terminus # should be "Menlo" or something on macOS.
+    family: Terminus # should be "Menlo" or something on macOS.
     # Style can be specified to pick a specific face.
-    # style: Bold
+    style: Bold
 
   # The italic font face
   italic:
-    family: xos4 Terminus # should be "Menlo" or something on macOS.
+    family: Terminus # should be "Menlo" or something on macOS.
     # Style can be specified to pick a specific face.
-    # style: Italic
-
-  # Point size of the font
-  size: 11.0
+    style: Italic
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
-  offset:
-    x: 0
-    y: 0
+  # offset:
+  #   x: 0
+  #   y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the right,
   # increasing `y` moves the glyph upwards.
-  glyph_offset:
-    x: 0
-    y: 0
+  # glyph_offset:
+  #   x: 0
+  #   y: 0
 
   # OS X only: use thin stroke font rendering. Thin strokes are suitable
   # for retina displays, but for non-retina you probably want this set to
@@ -116,11 +116,105 @@ debug:
   persistent_logging: false
 
 # Colors (Tomorrow Night Bright)
+
+#    SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      RGB         HSB
+#    --------- ------- ---- -------  ----------- ---------- ----------- -----------
+#    base03    #002b36  8/4 brblack  234 #1c1c1c 15 -12 -12   0  43  54 193 100  21
+#    base02    #073642  0/4 black    235 #262626 20 -12 -12   7  54  66 192  90  26
+#    base01    #586e75 10/7 brgreen  240 #585858 45 -07 -07  88 110 117 194  25  46
+#    base00    #657b83 11/7 bryellow 241 #626262 50 -07 -07 101 123 131 195  23  51
+#    base0     #839496 12/6 brblue   244 #808080 60 -06 -03 131 148 150 186  13  59
+#    base1     #93a1a1 14/4 brcyan   245 #8a8a8a 65 -05 -02 147 161 161 180   9  63
+#    base2     #eee8d5  7/7 white    254 #e4e4e4 92 -00  10 238 232 213  44  11  93
+#    base3     #fdf6e3 15/7 brwhite  230 #ffffd7 97  00  10 253 246 227  44  10  99
+#    yellow    #b58900  3/3 yellow   136 #af8700 60  10  65 181 137   0  45 100  71
+#    orange    #cb4b16  9/3 brred    166 #d75f00 50  50  55 203  75  22  18  89  80
+#    red       #dc322f  1/1 red      160 #d70000 50  65  45 220  50  47   1  79  86
+#    magenta   #d33682  5/5 magenta  125 #af005f 50  65 -05 211  54 130 331  74  83
+#    violet    #6c71c4 13/5 brmagenta 61 #5f5faf 50  15 -45 108 113 196 237  45  77
+#    blue      #268bd2  4/4 blue      33 #0087ff 55 -10 -45  38 139 210 205  82  82
+#    cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63
+#    green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60
+
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0x002b36' # '0x000000'
+#     foreground: '0x7e949c' # '0xeaeaea'
+# 
+#   # Colors the cursor will use if `custom_cursor_colors` is true
+#   cursor:
+#     text: '0x00566b' # '0x000000'
+#     cursor: '0x93a1a1' # '0xffffff'
+# 
+#   # Normal colors
+#   normal:
+#     black:   '0x000000'
+#     red:     '0xd54e53'
+#     green:   '0xb9ca4a'
+#     yellow:  '0xe6c547'
+#     blue:    '0x7aa6da'
+#     magenta: '0xc397d8'
+#     cyan:    '0x70c0ba'
+#     white:   '0xffffff'
+# 
+#   # Bright colors
+#   bright:
+#     black:   '0x666666'
+#     red:     '0xff3334'
+#     green:   '0x9ec400'
+#     yellow:  '0xe7c547'
+#     blue:    '0x7aa6da'
+#     magenta: '0xb77ee0'
+#     cyan:    '0x54ced6'
+#     white:   '0xffffff'
+# 
+#   # Dim colors (Optional)
+#   dim:
+#     black:   '0x333333'
+#     red:     '0xf2777a'
+#     green:   '0x99cc99'
+#     yellow:  '0xffcc66'
+#     blue:    '0x6699cc'
+#     magenta: '0xcc99cc'
+#     cyan:    '0x66cccc'
+#     white:   '0xdddddd'
+
+# Colors (Solarized Light)
+# colors:
+#   # Default colors
+#   primary:
+#     background: '0xfdf6e3'
+#     foreground: '0x586e75'
+# 
+#   # Normal colors
+#   normal:
+#     black:   '0x073642'
+#     red:     '0xdc322f'
+#     green:   '0x859900'
+#     yellow:  '0xb58900'
+#     blue:    '0x268bd2'
+#     magenta: '0xd33682'
+#     cyan:    '0x2aa198'
+#     white:   '0xeee8d5'
+# 
+#   # Bright colors
+#   bright:
+#     black:   '0x002b36'
+#     red:     '0xcb4b16'
+#     green:   '0x586e75'
+#     yellow:  '0x657b83'
+#     blue:    '0x839496'
+#     magenta: '0x6c71c4'
+#     cyan:    '0x93a1a1'
+#     white:   '0xfdf6e3'
+
+# Colors (Solarized Dark)
 colors:
   # Default colors
   primary:
-    background: '0x002b36' # '0x000000'
-    foreground: '0x7e949c' # '0xeaeaea'
+    background: '0x002b36'
+    foreground: '0x839496'
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
@@ -129,36 +223,25 @@ colors:
 
   # Normal colors
   normal:
-    black:   '0x000000'
-    red:     '0xd54e53'
-    green:   '0xb9ca4a'
-    yellow:  '0xe6c547'
-    blue:    '0x7aa6da'
-    magenta: '0xc397d8'
-    cyan:    '0x70c0ba'
-    white:   '0xffffff'
+    black:   '0x073642'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0xd33682'
+    cyan:    '0x2aa198'
+    white:   '0xeee8d5'
 
   # Bright colors
   bright:
-    black:   '0x666666'
-    red:     '0xff3334'
-    green:   '0x9ec400'
-    yellow:  '0xe7c547'
-    blue:    '0x7aa6da'
-    magenta: '0xb77ee0'
-    cyan:    '0x54ced6'
-    white:   '0xffffff'
-
-  # Dim colors (Optional)
-  dim:
-    black:   '0x333333'
-    red:     '0xf2777a'
-    green:   '0x99cc99'
-    yellow:  '0xffcc66'
-    blue:    '0x6699cc'
-    magenta: '0xcc99cc'
-    cyan:    '0x66cccc'
-    white:   '0xdddddd'
+    black:   '0x002b36'
+    red:     '0xcb4b16'
+    green:   '0x586e75'
+    yellow:  '0x657b83'
+    blue:    '0x839496'
+    magenta: '0x6c71c4'
+    cyan:    '0x93a1a1'
+    white:   '0xfdf6e3'
 
 # Visual Bell
 #
@@ -222,27 +305,47 @@ mouse:
   # If this is `true`, the cursor is temporarily hidden when typing.
   hide_when_typing: true
 
-  url:
-    # URL launcher
-    #
-    # This program is executed when clicking on a text which is recognized as a URL.
-    # The URL is always added to the command as the last parameter.
-    #
-    # When set to `None`, URL launching will be disabled completely.
-    #
-    # Default:
-    #   - (macOS) open
-    #   - (Linux) xdg-open
-    #   - (Windows) explorer
-    #launcher:
-    #  program: xdg-open
-    #  args: []
+# Regex hints
+# Terminal hints can be used to find text in the visible part of the terminal
+# and pipe it to other applications.
+hints:
+  # Keys used for the hint labels.
+  alphabet: "jfkdls;ahgurieowpq"
+  # List with all available hints
 
-    # URL modifiers
-    #
-    # These are the modifiers that need to be held down for opening URLs when clicking
-    # on them. The available modifiers are documented in the key binding section.
-    modifiers: None
+  # Each hint must have a `regex` and either an `action` or a `command` field.
+  # The fields `mouse`, `binding` and `post_processing` are optional.
+
+  # The fields `command`, `binding.key`, `binding.mods` and `mouse.mods` accept
+  # the same values as they do in the `key_bindings` section.
+
+  # The `mouse.enabled` field controls if the hint should be underlined while
+  # the mouse with all `mouse.mods` keys held or the vi mode cursor is above it.
+
+  # If the `post_processing` field is set to `true`, heuristics will be used to
+  # shorten the match if there are characters likely not to be part of the hint
+  # (e.g. a trailing `.`). This is most useful for URIs.
+
+  # Values for `action`:
+  #   - Copy
+  #       Copy the hint's text to the clipboard.
+  #   - Paste
+  #       Paste the hint's text to the terminal or search.
+  #   - Select
+  #       Select the hint's text.
+  #   - MoveViModeCursor
+  #       Move the vi mode cursor to the beginning of the hint.
+  enabled:
+    - regex: "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+       [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+      command: xdg-open
+      post_processing: true
+      mouse:
+        enabled: true
+        mods: None
+      binding:
+        key: U
+        mods: Control|Shift
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
@@ -263,7 +366,7 @@ cursor:
 
   # If this is `true`, the cursor will be rendered as a hollow box when the
   # window is not focused.
-  unfocused_hollow: false
+  unfocused_hollow: true
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -386,7 +489,7 @@ key_bindings:
   - { key: Insert,   mods: Shift,   action: PasteSelection               }
   - { key: Key0,     mods: Control, action: ResetFontSize                }
   - { key: Equals,   mods: Control, action: IncreaseFontSize             }
-  - { key: Subtract, mods: Control, action: DecreaseFontSize             }
+  - { key: Minus,    mods: Control, action: DecreaseFontSize             }
   - { key: Home,                    chars: "\x1bOH",   mode: AppCursor   }
   - { key: Home,                    chars: "\x1b[H",   mode: ~AppCursor  }
   - { key: End,                     chars: "\x1bOF",   mode: AppCursor   }
