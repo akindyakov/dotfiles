@@ -25,14 +25,9 @@ assert_src_dir() {
 }
 
 init_env() {
-  mkdir --parents "${HOME_TMP}"
-  mkdir --parents "${OLD_VERSION_DIR}"
-  mkdir --parents "${BIN_DIR}"
-  if [[ ! -L "${HOME}/Downloads" && -d "${HOME}/Downloads" ]]; then
-    mv "${HOME}/Downloads/"* "${HOME_TMP}/"
-    rm --recursive "${HOME}/Downloads"
-    ln --symbolic "${HOME_TMP}" "${HOME}/Downloads"
-  fi
+  mkdir -p "${HOME_TMP}"
+  mkdir -p "${OLD_VERSION_DIR}"
+  mkdir -p "${BIN_DIR}"
 }
 
 install_file() {
@@ -49,7 +44,7 @@ install_file() {
   fi
   local dst_dir="$(dirname ${dst})"
   if [[ ! -d "${dst_dir}" ]]; then
-    mkdir --parents "${dst_dir}"
+    mkdir -p "${dst_dir}"
   fi
   if [[ -L "${dst}" ]]; then
     local dst_realpath="$(readlink ${dst})"
@@ -57,7 +52,7 @@ install_file() {
       err "Unexpected symbolic link of target: ${dst} -> ${dst_realpath}"
     fi
   else
-    ln --symbolic "${src}" "${dst}"
+    ln -s "${src}" "${dst}"
   fi
 }
 
@@ -72,7 +67,7 @@ Manualy run 'sudo cp etc/X11/xorg.conf.d/70-synaptics.conf /etc/X11/xorg.conf.d/
 }
 
 crontab_cfg() {
-  mkdir --parents "${OLD_VERSION_DIR}"
+  mkdir -p "${OLD_VERSION_DIR}"
   crontab -l > "${OLD_VERSION_DIR}/crontab.cfg"
   cat crontab.cfg | crontab -
 }
@@ -132,10 +127,8 @@ x() {
 
 nogui() {
   init_env
-  vim_cfg
   nvim_cfg
   tmux_cfg
-  bash_cfg
   zsh_cfg
   ssh_cfg
   git_cfg

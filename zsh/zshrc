@@ -1,5 +1,7 @@
 # ~/.zshrc
 
+[[ -d ~/.zfunc ]] && FPATH+=~/.zfunc
+
 autoload -Uz compinit colors zcalc
 compinit -d
 colors
@@ -26,26 +28,18 @@ setprompt() {
     %F{cyan}][%f
     %(!.%F{red}%n%f.%F{green}%n%f)
     %F{cyan}@%f
-    ${p_host}
-    %F{cyan}][%f
-    %F{blue}%~%f
-    %F{cyan}]%f
+    %F{cyan}]
+    " "%(?.%F{green}%?%f.%F{red}%?%f)
+    " "%f%F{blue}%~%f%F{cyan}
     "\n"
     %(!.%F{red}%#%f.%F{green}%#%f)
     " "
   '}}
 
   PS2=$'%_>'
-  RPROMPT='[%(?.%F{green}%?%f.%F{red}%?%f)]'
 }
 
 setprompt
-
-
-# History
-export HISTFILE=~/.zsh_history
-export HISTSIZE=9999999
-export SAVEHIST=$HISTSIZE
 
 ## Alias section
 
@@ -54,18 +48,24 @@ export SAVEHIST=$HISTSIZE
 
 # json fancy format tool
 alias jsf="python -mjson.tool"
-alias timelog="ts '[%Y-%m-%d %H:%M:%S]'"
-alias plz="~/.please/please"
-alias metamorph="~/source/git.metamorph/target/release/metamorph --meta ~/source/git.note/todo/files/meta.json"
 
-SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
+_LOCAL_SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_socket"
 
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    rm -rf "${SSH_AUTH_SOCK}"
-    ssh-agent -a "${SSH_AUTH_SOCK}" > ~/.ssh/agent_start.sh
-    eval "$(<~/.ssh/agent_start.sh)"
+    # If ssh-agent process doesn't exists - spin it up
+    rm -rf "${_LOCAL_SSH_AUTH_SOCK}"
+    ssh-agent -a "${_LOCAL_SSH_AUTH_SOCK}" > ~/.ssh/agent_start.sh
+    eval "$(<~/.ssh/agent_start.sh)" > /dev/null
 else
-    export SSH_AUTH_SOCK
+    if [[ -z ${SSH_AUTH_SOCK} ]]; then
+      SSH_AUTH_SOCK=$_LOCAL_SSH_AUTH_SOCK
+      export SSH_AUTH_SOCK
+    else
+      if [[ ${SSH_AUTH_SOCK} != ${_LOCAL_SSH_AUTH_SOCK} ]]; then
+        rm -rf $_LOCAL_SSH_AUTH_SOCK
+        ln -s $SSH_AUTH_SOCK $_LOCAL_SSH_AUTH_SOCK
+      fi
+    fi
 fi
 
 ## History Configuration
@@ -110,7 +110,8 @@ bindkey '^[[1;5C' forward-word                                  #
 bindkey '^H' backward-kill-word                                 # delete previous word with ctrl+backspace
 bindkey '^[[Z' undo                                             # Shift+tab undo last action
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#source /usr/share/nvm/init-nvm.sh
-#export PATH=$PATH:~/.yarn/bin
-[ -d ~/.zfunc ] && fpath+=~/.zfunc
+plugins=(git ssh-agent)
+
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+# #source /usr/share/nvm/init-nvm.sh
+# #export PATH=$PATH:~/.yarn/bin
